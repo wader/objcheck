@@ -6,4 +6,8 @@
 
 + (id) genEven;
 
++ (id) reverse: (id) s;
+
++ (id) reversible: (id) args;
+
 @end

@@ -32,24 +32,14 @@
 }
 
 + (id) genString {
-	NSString* s = @"";
+	NSArray* arr = (NSArray*) [self genArray: ^() { return [ObjCheck genChar]; }];
 
-	NSArray* arr = [self genArray: ^() { return [ObjCheck genChar]; }];
-
-	if ([arr count] < 1) {
-		return @"";
-	}
-
-	char* arr2 = (char*) malloc(sizeof(char) * ([arr count] + 1));
+	NSString* s = [NSMutableString stringWithCapacity: [arr count]];
 
 	int i;
 	for (i = 0; i < [arr count]; i++) {
-		arr2[i] = [[arr objectAtIndex: i] charValue];
+		s = [s stringByAppendingString: [NSString stringWithFormat: @"%c", [[(NSArray*) arr objectAtIndex: i] charValue]]];
 	}
-
-	s = [NSString stringWithUTF8String: arr2];
-
-	free(arr2);
 
 	return s;
 }
@@ -60,7 +50,9 @@
 		NSArray* values = [NSMutableArray array];
 
 		for (j = 0; j < [generators count]; j++) {
-			values = [values arrayByAddingObject: ((id(^)()) [(NSArray*) generators objectAtIndex: j])()];
+			id value = ((id(^)()) [(NSArray*) generators objectAtIndex: j])();
+
+			values = [values arrayByAddingObject: value];
 		}
 
 		NSNumber* propertyHolds = property(values);
