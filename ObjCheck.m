@@ -55,7 +55,28 @@
 }
 
 + forAll: (id(^)(id)) property withGenerators: (id) generators {
-	// ...
+	int i, j, k;
+	for (i = 0; i < 100; i++) {
+		NSArray* values = [NSMutableArray array];
+
+		for (j = 0; j < [generators count]; j++) {
+			values = [values arrayByAddingObject: ((id(^)()) [(NSArray*) generators objectAtIndex: j])()];
+		}
+
+		NSNumber* propertyHolds = property(values);
+
+		if([propertyHolds boolValue] != YES) {
+			printf("*** Failed!\n");
+
+			for(k = 0; k < [values count]; k++) {
+				printf("%s\n", [[[values objectAtIndex: k] description] UTF8String]);
+			}
+
+			return;
+		}
+	}
+
+	printf("+++ OK, passed 100 tests.\n");
 }
 
 @end

@@ -2,6 +2,6 @@
 
 @interface Example: Object {}
 
-+ (id) isEven: (id) i;
++ (id) isEven: (id) args;
 
 @end
