@@ -35,7 +35,25 @@
 	NSString* s = @"";
 
 	NSArray* arr = [self genArray: ^() { return [ObjCheck genChar]; }];
-	s = [arr componentsJoinedByString: @""];
+
+	if ([arr count] < 1) {
+		return @"";
+	}
+
+	char* arr2 = (char*) malloc(sizeof(char) * ([arr count] + 1));
+
+	int i;
+	for (i = 0; i < [arr count]; i++) {
+		arr2[i] = '\0';
+	}
+
+	for (i = 0; i < [arr count]; i++) {
+		arr2[i] = [[arr objectAtIndex: i] charValue];
+	}
+
+	s = [NSString stringWithUTF8String: arr2];
+
+	free(arr2);
 
 	return s;
 }
