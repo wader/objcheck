@@ -44,10 +44,6 @@
 
 	int i;
 	for (i = 0; i < [arr count]; i++) {
-		arr2[i] = '\0';
-	}
-
-	for (i = 0; i < [arr count]; i++) {
 		arr2[i] = [[arr objectAtIndex: i] charValue];
 	}
 
@@ -58,7 +54,7 @@
 	return s;
 }
 
-+ forAll: (id^(id)) property withGenerators: (id) generators {
++ forAll: (id(^)(id)) property withGenerators: (id) generators {
 	// ...
 }
 

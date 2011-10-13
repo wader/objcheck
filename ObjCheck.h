@@ -8,6 +8,6 @@
 + (id) genArray: (id(^)()) gen;
 + (id) genString;
 
-+ forAll: (id^(id)) property withGenerators: (id) generators;
++ forAll: (id(^)(id)) property withGenerators: (id) generators;
 
 @end
