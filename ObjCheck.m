@@ -17,7 +17,7 @@
 }
 
 + (id) genArray: (id(^)()) gen {
-	NSArray* arr = [NSArray array];
+	NSArray* arr = [NSMutableArray array];
 
 	int len = arc4random() % 100;
 
@@ -56,6 +56,10 @@
 	free(arr2);
 
 	return s;
+}
+
++ forAll: (id^(id)) property withGenerators: (id) generators {
+	// ...
 }
 
 @end
