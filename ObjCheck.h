@@ -5,7 +5,7 @@
 + (int) genInt;
 + (BOOL) genBool;
 + (char) genChar;
-// + (id) genArray;
-// + (NSString) genString;
++ (id) genArray: (id) gen;
++ (id) genString;
 
 @end

@@ -16,12 +16,32 @@
 	return (char) (arc4random() % 128);
 }
 
-// + (id) genArray {
-// 	// ...
-// }
++ (id) genArray: (id) gen {
+	NSArray* arr = [NSArray array];
 
-// + (NSString) genString {
-// 	// ...
-// }
+	int len = [self genInt] % 100;
+
+	int i;
+	for (i = 0; i < len; i++) {
+		id value = gen();
+
+		arr = [arr arrayByAddingObject: value];
+	}
+
+	return arr;
+}
+
++ (id) genString {
+	NSString* s = @"";
+
+	char (^g)() = ^() {
+		return [ObjCheck genChar];
+	};
+
+	NSArray* arr = [self genArray: g];
+	s = [arr componentsJoinedByString: @""];
+
+	return s;
+}
 
 @end

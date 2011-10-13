@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
 
 	printf("Random character: %c\n", [ObjCheck genChar]);
 
-	// ...
+	printf("Random string: %s\n", [[ObjCheck genString] UTF8String]);
 
 	[pool drain];
 
