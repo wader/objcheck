@@ -5,4 +5,5 @@ EXAMPLE
 	$ make
 	$ ./example 
 	*** Failed!
-	1593463117
+	-1503156669
+	+++ OK, passed 100 tests.

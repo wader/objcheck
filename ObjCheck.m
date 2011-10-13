@@ -65,7 +65,7 @@
 
 		NSNumber* propertyHolds = property(values);
 
-		if([propertyHolds boolValue] != YES) {
+		if(![propertyHolds boolValue]) {
 			printf("*** Failed!\n");
 
 			for(k = 0; k < [values count]; k++) {

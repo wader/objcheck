@@ -12,6 +12,16 @@
 	return [NSNumber numberWithBool: b];
 }
 
++ (id) genEven {
+	int i = [(NSNumber*)[ObjCheck genNum] intValue];
+
+	if(i % 2 != 0) {
+		i++;
+	}
+
+	return [NSNumber numberWithInt: i];
+}
+
 @end
 
 int main(int argc, char **argv) {
@@ -20,7 +30,14 @@ int main(int argc, char **argv) {
 	NSArray* gs = [NSMutableArray array];
 	gs = [gs arrayByAddingObject: ^() { return [ObjCheck genNum]; }];
 
-	[ObjCheck forAll: ^(id args) { return [Example isEven: args]; } withGenerators: gs ];
+	// Are all integers even?
+	[ObjCheck forAll: ^(id args) { return [Example isEven: args]; } withGenerators: gs];
+
+	NSArray *gs2 = [NSMutableArray array];
+	gs2 = [gs2 arrayByAddingObject: ^() { return [Example genEven]; }];
+
+	// Are all even integers even?
+	[ObjCheck forAll: ^(id args) { return [Example isEven: args]; } withGenerators: gs2];
 
 	[pool drain];
 
