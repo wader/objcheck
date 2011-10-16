@@ -1,13 +1,13 @@
-#import <objc/Object.h>
+#import <Foundation/Foundation.h>
 
-@interface Example: Object {}
+@interface Example: NSObject {}
 
-+ (id) isEven: (id) args;
++ (id) isEven: (NSNumber *) i;
 
 + (id) genEven;
 
-+ (id) reverse: (id) s;
++ (id) reverse: (NSString *) s;
 
-+ (id) reversible: (id) args;
++ (id) reversible: (NSString *) s;
 
 @end

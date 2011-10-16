@@ -2,6 +2,25 @@
 #import <Foundation/Foundation.h>
 #import <stdlib.h>
 
+@implementation NSObject (performSelectorWithArgsArray)
+- (id)performSelector:(SEL)sel withArgsArray:(NSArray *)args {
+	NSInvocation *inv = [NSInvocation invocationWithMethodSignature:
+				       [self methodSignatureForSelector:sel]];
+	[inv setSelector:sel];
+	[inv setTarget:self];
+	int i;
+	for (i = 0; i < args.count; i++) {
+	      id a = [args objectAtIndex:i];
+	      [inv setArgument:&a atIndex:2 + i]; // 0 is target, 1 i cmd-selector
+	}
+	[inv invoke];
+
+	NSNumber *r;
+	[inv getReturnValue:&r];
+	return r;
+}
+@end
+
 @implementation ObjCheck
 
 + (id) genNum {
@@ -17,54 +36,39 @@
 }
 
 + (id) genArray: (id(^)()) gen {
-	NSArray* arr = [NSMutableArray array];
+	NSMutableArray* arr = [NSMutableArray array];
 
 	int len = arc4random() % 100;
-
 	int i;
 	for (i = 0; i < len; i++) {
-		id value = gen();
-
-		arr = [arr arrayByAddingObject: value];
+		[arr addObject:gen()];
 	}
 
 	return arr;
 }
 
 + (id) genString {
-	NSArray* arr = (NSArray*) [self genArray: ^() { return [ObjCheck genChar]; }];
-
-	NSString* s = [NSMutableString stringWithCapacity: [arr count]];
+	NSMutableArray* arr = (NSMutableArray*) [self genArray: ^() { return [ObjCheck genChar]; }];
+	NSMutableString* s = [NSMutableString stringWithCapacity: [arr count]];
 
 	int i;
 	for (i = 0; i < [arr count]; i++) {
-		s = [s stringByAppendingString: [NSString stringWithFormat: @"%c", [[(NSArray*) arr objectAtIndex: i] charValue]]];
+		[s appendString: [NSString stringWithFormat: @"%c", [[arr objectAtIndex: i] charValue]]];
 	}
 
 	return s;
 }
 
-+ forAll: (id(^)(id)) property withGenerators: (id) generators {
++ target:(id)target withSelector:(SEL)sel withGenerators:(NSArray *)generators {
 	int i, j, k;
 	for (i = 0; i < 100; i++) {
-		NSArray* values = [NSMutableArray array];
-
-		for (j = 0; j < [generators count]; j++) {
-			id value = ((id(^)()) [(NSArray*) generators objectAtIndex: j])();
-
-			values = [values arrayByAddingObject: value];
-		}
-
-		NSNumber* propertyHolds = property(values);
-
-		if(![propertyHolds boolValue]) {
-			printf("*** Failed!\n");
-
-			for(k = 0; k < [values count]; k++) {
-				printf("%s\n", [[[values objectAtIndex: k] description] UTF8String]);
+		for (NSArray *(^b)() in generators) {
+			NSArray *args = b();
+			if(![[target performSelector:sel withArgsArray:args] boolValue]) {
+				printf("*** Failed! %s %s\n",
+				       [NSStringFromSelector(sel) UTF8String],
+				       [[args description] UTF8String]);
 			}
-
-			return;
 		}
 	}
 

@@ -4,11 +4,8 @@
 
 @implementation Example
 
-+ (id) isEven: (id) args {
-	NSNumber* i = [(NSArray*) args objectAtIndex: 0];
-
++ (id) isEven: (NSNumber *)i {
 	BOOL b = [i intValue] % 2 == 0;
-
 	return [NSNumber numberWithBool: b];
 }
 
@@ -24,10 +21,10 @@
 
 // From Mac Developer Tips
 // http://macdevelopertips.com/objective-c/objective-c-categories.html
-+ (id) reverse: (id) s {
++ (id) reverse: (NSString *) s {
 	NSString *result;
 
-	int len = [(NSString*) s length];
+	int len = [s length];
 
 	result = [NSMutableString stringWithCapacity: len];
 
@@ -38,8 +35,7 @@
 	return result;
 }
 
-+ (id) reversible: (id) args {
-	NSString* s = [(NSArray*) args objectAtIndex: 0];
++ (id) reversible: (NSString *) s {
 	NSString* r = [self reverse: s];
 	NSString* s2 = [self reverse: r];
 
@@ -54,22 +50,22 @@ int main(int argc, char **argv) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	NSArray* gs = [NSMutableArray array];
-	gs = [gs arrayByAddingObject: ^() { return [ObjCheck genNum]; }];
+	gs = [gs arrayByAddingObject: ^() { return [NSArray arrayWithObject:[ObjCheck genNum]]; }];
 	
 	// Are all integers even?
-	[ObjCheck forAll: ^(id args) { return [Example isEven: args]; } withGenerators: gs];
-	
+	[ObjCheck target:[Example class] withSelector:@selector(isEven:) withGenerators:gs];
+
 	NSArray* gs2 = [NSMutableArray array];
-	gs2 = [gs2 arrayByAddingObject: ^() { return [Example genEven]; }];
+	gs2 = [gs2 arrayByAddingObject: ^() { return [NSArray arrayWithObject:[Example genEven]]; }];
 	
 	// Are all even integers even?
-	[ObjCheck forAll: ^(id args) { return [Example isEven: args]; } withGenerators: gs2];
+	[ObjCheck target:[Example class] withSelector:@selector(isEven:) withGenerators:gs2];
 
 	NSArray* gs3 = [NSMutableArray array];
-	gs3 = [gs3 arrayByAddingObject: ^() { return [ObjCheck genString]; }];
+	gs3 = [gs3 arrayByAddingObject: ^() { return [NSArray arrayWithObject:[ObjCheck genString]]; }];
 
 	// Are all strings reversible?
-	[ObjCheck forAll: ^(id args) { return [Example reversible: args]; } withGenerators: gs3];
+	[ObjCheck target:[Example class] withSelector:@selector(reversible:) withGenerators:gs3];
 
 	[pool drain];
 
